@@ -114,5 +114,5 @@ void ListEvents(EventList *this)
 
 void DestroyEventList(EventList *this)
 {
-    free(this->isEmpty);
+    free(this);
 }
