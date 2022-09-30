@@ -56,12 +56,60 @@ void AddEvent(EventList *this, Event *event)
 
 void RemoveEvent(EventList *this, char *name)
 {
-   
+    if (this->isEmpty == 0)
+    {
+       Event *actualEvent = this->head->next;  
+       Event *lastEvent = this->head;
+       if(strcmp(name, lastEvent->eventName)==0)
+       {
+            if(lastEvent->next == NULL)
+            {
+                this->head = NULL;
+                this->last = NULL;
+                this->isEmpty = 1;
+                DestroyEvent(lastEvent);
+            }
+            else
+            {
+                this->head=actualEvent;
+                DestroyEvent(lastEvent);
+            }
+       }
+       while (actualEvent != NULL)
+       {
+            if(strcmp(name, actualEvent->eventName)==0)
+            {
+                lastEvent->next = actualEvent->next;
+                if (this->last->next == NULL)
+                {
+                    this->last = lastEvent;
+                    DestroyEvent(actualEvent);
+                }
+            }
+            lastEvent = actualEvent;
+            actualEvent = actualEvent->next;
+       }
+    }
 }
 
 void ListEvents(EventList *this)
 {
-   
+    if (this->isEmpty == 0)
+    {
+        Event *actualEvent = this->head;
+
+
+        while (actualEvent != NULL)
+        {
+            printf("%s\n", actualEvent->eventName);
+            actualEvent = actualEvent->next;
+        }       
+    }
+    else
+    {
+        printf("empty\n");
+    }
+
 }
 
 void DestroyEventList(EventList *this)
