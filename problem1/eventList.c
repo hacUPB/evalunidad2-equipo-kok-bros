@@ -3,21 +3,47 @@
 #include <stdio.h>
 #include <string.h>
 
-EventList *CreateEventList(void)
+EventList *CreateEventList(void)  
 {
     EventList *eventList = malloc(sizeof(EventList));
-    eventList->isEmpty = 1;
-    eventList->head = 0;
-    eventList->last = 0;
+    eventList->isEmpty = 0;
+    eventList->head = NULL;
+    eventList->last = NULL;
     
     return eventList;
 }
 
+void AddEvent(EventList *this, Event *event)
+{
+    Event *actualEvent = this->head;
+   
+    
+   if(this->head == NULL)
+   {
+     this->head = event;
+     this->last = event;
+     this->isEmpty = 1;   
+      
+   }
+   else
+   {
+    while (actualEvent != NULL)
+     
+    {
+        if(strcmp(event->eventName, actualEvent->eventName) == 0)
+        return;
+
+        actualEvent = actualEvent->next;
+    }
+       this->last->next = event;
+       this->last=event;
+   }
+}
 
 Event *SearchEvent(EventList *this, char *name)
 {
     Event *actualEvent = this->head;
-    if (this->isEmpty == 0)
+    if (this->isEmpty == 1)
     {
         while (actualEvent != NULL)
         {
@@ -30,33 +56,16 @@ Event *SearchEvent(EventList *this, char *name)
     return actualEvent;
 }
 
-void AddEvent(EventList *this, Event *event)
-{
-    Event *actualEvent = this->head;
-    while (actualEvent != NULL)
-    {
-        if(strcmp(event->eventName, actualEvent->eventName) == 0)
-        return;
 
-        actualEvent = actualEvent->next;
-    }
-    
-   if(this->isEmpty == 0)
-   {
-        this->last->next = event;
-        this->last=event;
-   }
-   else
-   {
-       this->head = event;
-       this->last = event;
-       this->isEmpty = 0;    
-   }
+
+void DestroyEventList(EventList *this)
+{
+    free(this);
 }
 
 void RemoveEvent(EventList *this, char *name)
 {
-    if (this->isEmpty == 0)
+    if (this->isEmpty == 1)
     {
        Event *actualEvent = this->head->next;  
        Event *lastEvent = this->head;
@@ -66,7 +75,7 @@ void RemoveEvent(EventList *this, char *name)
             {
                 this->head = NULL;
                 this->last = NULL;
-                this->isEmpty = 1;
+                this->isEmpty = 0;
                 DestroyEvent(lastEvent);
             }
             else
@@ -94,7 +103,7 @@ void RemoveEvent(EventList *this, char *name)
 
 void ListEvents(EventList *this)
 {
-    if (this->isEmpty == 0)
+    if (this->isEmpty == 1)
     {
         Event *actualEvent = this->head;
 
@@ -112,7 +121,3 @@ void ListEvents(EventList *this)
 
 }
 
-void DestroyEventList(EventList *this)
-{
-    free(this);
-}
